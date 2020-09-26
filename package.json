@@ -1,0 +1,37 @@
+{
+  "name": "simpsons_data",
+  "version": "1.0.0",
+  "description": "Please enjoy this dataset of Simpsons data, scraped from SimponsWorld.",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "knex": "^0.21.5",
+    "node": "^14.12.0",
+    "pg": "^8.3.3",
+    "postgres": "^1.0.2",
+    "pyyaml": "0.0.1"
+  },
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "supertest": "^5.0.0"
+  },
+  "scripts": {
+    "setup-dbs": "psql -f ./db/setup.sql",
+    "migrate-make": "knex migrate:make",
+    "migrate-latest": "knex migrate:latest",
+    "migrate-rollback": "knex migrate:rollback",
+    "seed": "knex seed:run",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/berbakay/simpsons_data.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/berbakay/simpsons_data/issues"
+  },
+  "homepage": "https://github.com/berbakay/simpsons_data#readme"
+}
