@@ -2,7 +2,7 @@
 exports.up = function(knex) {
     console.log('creating character table...');
     return knex.schema.createTable('characters', (characterTable) => {
-        characterTable.increments('charater_id').primary();
+        characterTable.increments('character_id').primary();
         characterTable.string('character_full_name').notNullable();
         characterTable.string('character_short_name').notNullable();
     })

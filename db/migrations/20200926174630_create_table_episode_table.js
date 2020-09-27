@@ -7,9 +7,9 @@ exports.up = function(knex) {
         episodeTable.integer('season').notNullable();
         episodeTable.integer('episode').notNullable();
         episodeTable.text('description').notNullable();
-        episodeTable.text('disneyplus_id').notNullable();
-        episodeTable.integer('simpsonsworld_id').notNullable();
-        episodeTable.integer('is_good').notNullable();
+        episodeTable.string('disneyplus_id');
+        episodeTable.bigInteger('simpsonsworld_id');
+        episodeTable.boolean('good').notNullable();
     })
   
 };
