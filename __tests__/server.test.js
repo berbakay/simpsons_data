@@ -19,5 +19,23 @@ describe('app', () => {
                 })
             })
         })
+        describe('/episode', () => {
+            describe('GET', () => {
+                it.only('200: returns an episode object that returns the correct keys', () => {
+                    return request(app).get('/api/episode').expect(200).then(({ body : { episodeData } }) => {
+                        expect(episodeData).toHaveProperty('title');
+                        expect(episodeData).toHaveProperty('season');
+                        expect(episodeData).toHaveProperty('episode');
+                        expect(episodeData).toHaveProperty('description');
+                        expect(episodeData).toHaveProperty('disneyplus_id');
+                        expect(episodeData).toHaveProperty('simpsonsworld_id');
+                        expect(episodeData).toHaveProperty('episode_id');
+                        expect(episodeData).toHaveProperty('good');
+                        expect(episodeData).toHaveProperty('characters');
+                        expect(Array.isArray(episodeData.characters)).toBe(true);
+                    })
+                })
+            })
+        })
     })
 })
