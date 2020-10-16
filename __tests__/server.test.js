@@ -20,8 +20,8 @@ describe('app', () => {
             })
         })
         describe('/episode', () => {
-            describe('GET', () => {
-                it.only('200: returns an episode object that returns the correct keys', () => {
+            describe.only('GET', () => {
+                it('200: returns an episode object that returns the correct keys', () => {
                     return request(app).get('/api/episode').expect(200).then(({ body : { episodeData } }) => {
                         expect(episodeData).toHaveProperty('title');
                         expect(episodeData).toHaveProperty('season');
@@ -33,6 +33,12 @@ describe('app', () => {
                         expect(episodeData).toHaveProperty('good');
                         expect(episodeData).toHaveProperty('characters');
                         expect(Array.isArray(episodeData.characters)).toBe(true);
+                    })
+                })
+                it('200: accepts a isGood query that only returns good or bad episodes', () => {
+                    return request(app).get('/api/episode?isGood=false').expect(200).then(({ body : { episodeData } }) => {
+                        console.log(episodeData.good)
+                        expect(episodeData.good).toBe(false);
                     })
                 })
             })

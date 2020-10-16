@@ -1,9 +1,15 @@
 const connection = require('../db/connection');
 
-function fetchEpisode() {
+function fetchEpisode(isGood) {
+    console.log(isGood);
     return connection
     .select('*')
     .from('episodes')
+    .modify((request) => {
+        if(isGood !== undefined) {
+            request.where('good', isGood);
+        }
+    })
     .returning('*')
     .then(episodes => {
         const RandomEpisode = Math.floor(Math.random() * (episodes.length - 1));
