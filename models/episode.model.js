@@ -1,13 +1,19 @@
 const connection = require('../db/connection');
 
-function fetchEpisode(isGood) {
-    console.log(isGood);
+function fetchEpisode(isGood, minSeason, maxSeason) {
+    if(!minSeason) minSeason = 1;
     return connection
     .select('*')
     .from('episodes')
     .modify((request) => {
         if(isGood !== undefined) {
             request.where('good', isGood);
+        }
+    })
+    .andWhere('season', '>=', minSeason)
+    .modify((request) => {
+        if(maxSeason) {
+            request.andWhere('season', '<=', maxSeason);
         }
     })
     .returning('*')

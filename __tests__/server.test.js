@@ -41,6 +41,18 @@ describe('app', () => {
                         expect(episodeData.good).toBe(false);
                     })
                 })
+                it('200: accepts a minSeason query that only returns episodes in seasons greater than or equal to that number', () => {
+                    return request(app).get('/api/episode?minSeason=4').expect(200).then(({ body: { episodeData } }) => {
+                        console.log(episodeData.season);
+                        expect(episodeData.season).toBeGreaterThan(3);
+                    })
+                })
+                it('200: accepts a maxSeason query that only returns episodes in seasons less than or equal to that number', () => {
+                    return request(app).get('/api/episode?maxSeason=1').expect(200).then(({ body: { episodeData } }) => {
+                        console.log(episodeData.season);
+                        expect(episodeData.season).toBeLessThan(2);
+                    })
+                })
             })
         })
     })
