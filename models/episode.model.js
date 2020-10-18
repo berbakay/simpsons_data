@@ -1,7 +1,10 @@
+const { type } = require('os');
 const connection = require('../db/connection');
 
 function fetchEpisode(isGood, minSeason, maxSeason) {
-    if(!minSeason) minSeason = 1;
+    if(!minSeason || isNaN(Number(minSeason))) minSeason = 1;
+    if(isNaN(Number(maxSeason))) maxSeason = 30
+    if(isGood !== "true" || isGood !== "false") isGood = undefined 
     return connection
     .select('*')
     .from('episodes')
@@ -22,6 +25,7 @@ function fetchEpisode(isGood, minSeason, maxSeason) {
         return episodes[RandomEpisode];
     })
     .then(randomEpisode => {
+        if(!randomEpisode) return Promise.reject(400)
         const CharacterData = connection
         .select('*')
         .from('characterepisode')

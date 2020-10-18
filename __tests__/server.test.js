@@ -12,6 +12,13 @@ afterAll(() => {
 
 describe('app', () => {
     describe('/api', () => {
+        describe('Invalid Path', () => {
+            it('404: if user inputs an invalid path', () => {
+                return request(app).get('/api/nothing').expect(404).then(({ body: { msg } }) => {
+                    expect(msg).toBe('Path does not exist');
+                })
+            })
+        })
         describe('GET', () => {
             it ('200: returns a console log', () => {
                 return request(app).get('/api').expect(200).then(({ body: { msg } }) => {
@@ -20,7 +27,7 @@ describe('app', () => {
             })
         })
         describe('/episode', () => {
-            describe.only('GET', () => {
+            describe('GET', () => {
                 it('200: returns an episode object that returns the correct keys', () => {
                     return request(app).get('/api/episode').expect(200).then(({ body : { episodeData } }) => {
                         expect(episodeData).toHaveProperty('title');
@@ -52,6 +59,41 @@ describe('app', () => {
                         console.log(episodeData.season);
                         expect(episodeData.season).toBeLessThan(2);
                     })
+                })
+                it('400: if minSeason > number of seasons', () => {
+                    return request(app).get('/api/episode?minSeason=7').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    }) 
+                })
+                it('400: if maxSeason < 1', () => {
+                    return request(app).get('/api/episode?maxSeason=0').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    }) 
+                })
+                it('400: if maxSeason <  minSeason', () => {
+                    return request(app).get('/api/episode?minSeason=10&maxSeason=5').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    }) 
+                })
+                it('200: if passed non int for min season', () => {
+                    return request(app).get('/api/episode?minSeason=cat').expect(200)
+                })
+                it('200: if passed non int for max season', () => {
+                    return request(app).get('/api/episode?maxSeason=cat').expect(200)
+                })
+                it('200: ignores isGood query if passed non bool', () => {
+                    return request(app).get('/api/episode?isGood=banana').expect(200)
+                }) 
+            })
+            describe('Invalid Method', () => {
+                it('405: if passed invalid method', () => {
+                    const invalidMethods = ['put', 'delete', 'patch', 'post']
+                    const methodPromises = invalidMethods.map(method => {
+                        return request(app)[method]("/api/episode").expect(405).then(({ body: { msg } }) => {
+                            expect(msg).toBe('Invalid Method');
+                        })
+                    })
+                    return Promise.all(methodPromises);
                 })
             })
         })
