@@ -31,6 +31,7 @@ module.exports = [{
     "simpsonsworld_id": 273381443699,
     "good": false,
     "characters": [
+        "one",
         "three"
     ]
 },

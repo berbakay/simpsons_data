@@ -96,6 +96,35 @@ describe('app', () => {
                     return Promise.all(methodPromises);
                 })
             })
+            describe('/:character_id', () => {
+                describe.only('GET', () => {
+                    it('200: returns an episode object containing character', () => {
+                        return request(app).get('/api/episode/1').expect(200).then(({ body : { episodeData } }) => {
+                            expect(episodeData).toHaveProperty('title');
+                        expect(episodeData).toHaveProperty('season');
+                        expect(episodeData).toHaveProperty('episode');
+                        expect(episodeData).toHaveProperty('description');
+                        expect(episodeData).toHaveProperty('disneyplus_id');
+                        expect(episodeData).toHaveProperty('simpsonsworld_id');
+                        expect(episodeData).toHaveProperty('episode_id');
+                        expect(episodeData).toHaveProperty('good');
+                        expect(episodeData).toHaveProperty('characters');
+                        expect(Array.isArray(episodeData.characters)).toBe(true);
+                        expect(episodeData.characters).toContain("number one");
+                        })
+                    })
+                    it('400: if character id doesn\'t exist', () => {
+                        return request(app).get('/api/episode/10').expect(400).then(({ body : { msg } }) => {
+                            expect(msg).toBe('no episode found');
+                        })
+                    })
+                    it('400: if passed invalid character id type', () => {
+                        return request(app).get('/api/episode/banana').expect(400).then(({ body : { msg } }) => {
+                            expect(msg).toBe('no episode found');
+                        })
+                    })
+                })
+            })
         })
     })
 })
