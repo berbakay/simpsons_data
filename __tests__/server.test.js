@@ -97,7 +97,7 @@ describe('app', () => {
                 })
             })
             describe('/:character_id', () => {
-                describe.only('GET', () => {
+                describe('GET', () => {
                     it('200: returns an episode object containing character', () => {
                         return request(app).get('/api/episode/1').expect(200).then(({ body : { episodeData } }) => {
                             expect(episodeData).toHaveProperty('title');
@@ -122,6 +122,17 @@ describe('app', () => {
                         return request(app).get('/api/episode/banana').expect(400).then(({ body : { msg } }) => {
                             expect(msg).toBe('no episode found');
                         })
+                    })
+                })
+                describe('Invalid Method', () => {
+                    it('405: if passed invalid method', () => {
+                        const invalidMethods = ['put', 'delete', 'patch', 'post']
+                        const methodPromises = invalidMethods.map(method => {
+                            return request(app)[method]("/api/episode/1").expect(405).then(({ body: { msg } }) => {
+                                expect(msg).toBe('Invalid Method');
+                            })
+                        })
+                        return Promise.all(methodPromises);
                     })
                 })
             })
