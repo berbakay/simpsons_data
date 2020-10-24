@@ -44,19 +44,16 @@ describe('app', () => {
                 })
                 it('200: accepts a isGood query that only returns good or bad episodes', () => {
                     return request(app).get('/api/episode?isGood=false').expect(200).then(({ body : { episodeData } }) => {
-                        console.log(episodeData.good)
                         expect(episodeData.good).toBe(false);
                     })
                 })
                 it('200: accepts a minSeason query that only returns episodes in seasons greater than or equal to that number', () => {
                     return request(app).get('/api/episode?minSeason=4').expect(200).then(({ body: { episodeData } }) => {
-                        console.log(episodeData.season);
                         expect(episodeData.season).toBeGreaterThan(3);
                     })
                 })
                 it('200: accepts a maxSeason query that only returns episodes in seasons less than or equal to that number', () => {
                     return request(app).get('/api/episode?maxSeason=1').expect(200).then(({ body: { episodeData } }) => {
-                        console.log(episodeData.season);
                         expect(episodeData.season).toBeLessThan(2);
                     })
                 })
@@ -133,6 +130,44 @@ describe('app', () => {
                             })
                         })
                         return Promise.all(methodPromises);
+                    })
+                })
+            })
+        })
+        describe('/episodes', () => {
+            describe('GET', () => {
+                it('200: returns an array of simpsons episodes', () => {
+                    return request(app).get('/api/episodes').expect(200).then(({ body: { episodes } }) => {
+                        expect(Array.isArray(episodes)).toBe(true);
+                        expect(episodes[0]).toHaveProperty('title');
+                        expect(episodes[0]).toHaveProperty('season');
+                        expect(episodes[0]).toHaveProperty('episode');
+                        expect(episodes[0]).toHaveProperty('description');
+                        expect(episodes[0]).toHaveProperty('disneyplus_id');
+                        expect(episodes[0]).toHaveProperty('simpsonsworld_id');
+                        expect(episodes[0]).toHaveProperty('episode_id');
+                        expect(episodes[0]).toHaveProperty('good');
+                    })
+                })
+                it('200: accepts a isGood query that only returns good or bad episodes', () => {
+                    return request(app).get('/api/episodes?isGood=false').expect(200).then(({ body : { episodes } }) => {
+                        episodes.forEach(episode => {
+                            expect(episode.good).toBe(false);
+                        })
+                    })
+                })
+                it('200: accepts a minSeason query that only returns episodes in seasons greater than or equal to that number', () => {
+                    return request(app).get('/api/episodes?minSeason=4').expect(200).then(({ body: { episodes } }) => {
+                        episodes.forEach(episode => {
+                            expect(episode.season).toBeGreaterThan(3);
+                        })
+                    })
+                })
+                it('200: accepts a maxSeason query that only returns episodes in seasons less than or equal to that number', () => {
+                    return request(app).get('/api/episodes?maxSeason=1').expect(200).then(({ body: { episodes } }) => {
+                        episodes.forEach(episode => {
+                            expect(episode.season).toBeLessThan(2);
+                        })
                     })
                 })
             })

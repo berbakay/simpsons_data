@@ -1,0 +1,35 @@
+{
+    "GET /api": {
+        "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "GET /api/episde": {
+        "description": "returns random episode object",
+        "queries": ["isGood", "minSeason", "maxSeason"],
+        "example response": {
+            "episode_id": 3,
+            "title": "Episode 3",
+            "season": 3,
+            "episode": 3,
+            "description": "This is episode 3",
+            "disneyplus_id": "0e8e7f27-0ab2-495f-8254-d99d3c53ce4f",
+            "simpsonsworld_id": 273381443699,
+            "good": false,
+            "characters": [ "number one", "number three" ]
+        }   
+    },
+    "GET /api/episode/:character_id": {
+        "description": "returns random episode object which must contain specified character",
+        "queries": ["isGood", "minSeason", "maxSeason"],
+        "example response": {
+            "episode_id": 3,
+            "title": "Episode 3",
+            "season": 3,
+            "episode": 3,
+            "description": "This is episode 3",
+            "disneyplus_id": "0e8e7f27-0ab2-495f-8254-d99d3c53ce4f",
+            "simpsonsworld_id": 273381443699,
+            "good": false,
+            "characters": [ "number one", "number three" ]
+        }
+    }
+}

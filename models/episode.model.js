@@ -1,5 +1,3 @@
-const { connect } = require('http2');
-const { type } = require('os');
 const connection = require('../db/connection');
 
 function fetchEpisode(isGood, minSeason, maxSeason) {
