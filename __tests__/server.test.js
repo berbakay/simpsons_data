@@ -170,7 +170,85 @@ describe('app', () => {
                         })
                     })
                 })
+                it('400: if minSeason > number of seasons', () => {
+                    return request(app).get('/api/episodes?minSeason=7').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    }) 
+                })
+                it('400: if maxSeason < 1', () => {
+                    return request(app).get('/api/episodes?maxSeason=0').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    }) 
+                })
+                it('400: if maxSeason <  minSeason', () => {
+                    return request(app).get('/api/episodes?minSeason=10&maxSeason=5').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    }) 
+                })
+                it('200: if passed non int for min season', () => {
+                    return request(app).get('/api/episodes?minSeason=cat').expect(200)
+                })
+                it('200: if passed non int for max season', () => {
+                    return request(app).get('/api/episodes?maxSeason=cat').expect(200)
+                })
+                it('200: ignores isGood query if passed non bool', () => {
+                    return request(app).get('/api/episodes?isGood=banana').expect(200)
+                })     
             })
+            describe('Invalid Method', () => {
+                it('405: if passed invalid method', () => {
+                    const invalidMethods = ['put', 'delete', 'patch', 'post']
+                    const methodPromises = invalidMethods.map(method => {
+                        return request(app)[method]("/api/episodes").expect(405).then(({ body: { msg } }) => {
+                            expect(msg).toBe('Invalid Method');
+                        })
+                    })
+                    return Promise.all(methodPromises);
+                })
+            })
+            describe('/:episode_id', () => {
+                describe('GET', () => {
+                    it('200: returns an episode object that returns the correct keys', () => {
+                        return request(app).get('/api/episodes/1').expect(200).then(({ body : { episodeData } }) => {
+                            expect(episodeData).toHaveProperty('title');
+                            expect(episodeData).toHaveProperty('season');
+                            expect(episodeData).toHaveProperty('episode');
+                            expect(episodeData).toHaveProperty('description');
+                            expect(episodeData).toHaveProperty('disneyplus_id');
+                            expect(episodeData).toHaveProperty('simpsonsworld_id');
+                            expect(episodeData).toHaveProperty('episode_id');
+                            expect(episodeData).toHaveProperty('good');
+                            expect(episodeData).toHaveProperty('characters');
+                            expect(Array.isArray(episodeData.characters)).toBe(true);
+                            expect(episodeData.title).toBe("Episode 1");
+                        })
+                    })
+                    it('400: if passed non existent episode_id', () => {
+                        return request(app).get('/api/episodes/100').expect(400).then(({ body : { msg } }) => {
+                            expect(msg).toBe('no episode found')
+                        })
+                    })
+                    it('400: if passed invalid episode_id type', () => {
+                        return request(app).get('/api/episodes/banana').expect(400).then(({ body: { msg } }) => {
+                            expect(msg).toBe('no episode found');
+                        })
+                    })
+                }) 
+                describe('Invalid Method', () => {
+                    it('405: if passed invalid method', () => {
+                        const invalidMethods = ['put', 'delete', 'patch', 'post']
+                        const methodPromises = invalidMethods.map(method => {
+                            return request(app)[method]("/api/episodes/1").expect(405).then(({ body: { msg } }) => {
+                                expect(msg).toBe('Invalid Method');
+                            })
+                        })
+                        return Promise.all(methodPromises);
+                    })
+                }) 
+            })    
         })
+        describe('/characters'), () => {
+            
+        }
     })
 })

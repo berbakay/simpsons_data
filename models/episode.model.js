@@ -4,8 +4,7 @@ function fetchEpisode(isGood, minSeason, maxSeason) {
     
     if(!minSeason || isNaN(Number(minSeason))) minSeason = 1;
     if(isNaN(Number(maxSeason))) maxSeason = 30
-    if(isGood !== "true" && isGood !== "false") isGood = undefined 
-    console.log(isGood);
+    if(isGood !== "true" && isGood !== "false") isGood = undefined
     return connection
     .select('*')
     .from('episodes')

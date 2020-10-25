@@ -1,7 +1,7 @@
 const { fetchEpisode, fetchEpisodeByCharacter } = require('../models/episode.model');
 
 exports.getEpisode = (req, res, next) => {
-    const { isGood, minSeason, maxSeason } = req.query;
+    const { isGood, minSeason, maxSeason} = req.query;
     fetchEpisode(isGood, minSeason, maxSeason)
     .then(EpisodeCharacterData => {
         const episodeData = EpisodeCharacterData[0];

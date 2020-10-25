@@ -7,7 +7,6 @@ const { handle500, handle404, handle400 } = require('./error');
 app.use(cors())
 app.use('/api', apiRouter);
 app.all('/*', handle404);
-
 app.use(handle400);
 app.use(handle500);
 

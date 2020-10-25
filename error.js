@@ -8,6 +8,7 @@ exports.handle404 = (req, res, next) => {
 
 exports.handle400 = (err, req, res , next) => {
     if(err === 400 || err.code === '22P02') res.status(400).send({msg: 'no episode found'})
+    else (next(err))
 }
 
 exports.handle500 = (err, req, res, next) => {
