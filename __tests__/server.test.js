@@ -247,8 +247,23 @@ describe('app', () => {
                 }) 
             })    
         })
-        describe('/characters'), () => {
-            
-        }
+        describe('/characters', () => {
+            describe.only('GET', () => {
+                it('200: returns an array of characters', () => {
+                    return request(app).get('/api/characters').expect(200).then(({ body : { characters } }) => {
+                        expect(Array.isArray(characters)).toBe(true);
+                        expect(characters[0]).toHaveProperty('character_id');
+                        expect(characters[0]).toHaveProperty('character_full_name');
+                        expect(characters[0]).toHaveProperty('character_short_name');
+                    })
+                })
+                it('200: accepts a nameContains query that filters results by given string', () => {
+                    return request(app).get('/api/characters?nameContains=two').expect(200).then(({ body : { characters } }) => {
+                        expect(characters.length).toBe(1);
+                        expect(characters[0].character_full_name).toBe("number two")
+                    })
+                })
+            })
+        })
     })
 })
