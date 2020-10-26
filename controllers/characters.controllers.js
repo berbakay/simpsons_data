@@ -7,3 +7,7 @@ exports.getCharacters = (req, res, next) => {
         res.status(200).send({ characters });
     })
 }
+
+exports.getCharactersByID = (req, res, next) => {
+    
+}

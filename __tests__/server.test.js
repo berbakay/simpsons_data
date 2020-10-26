@@ -248,7 +248,7 @@ describe('app', () => {
             })    
         })
         describe('/characters', () => {
-            describe.only('GET', () => {
+            describe('GET', () => {
                 it('200: returns an array of characters', () => {
                     return request(app).get('/api/characters').expect(200).then(({ body : { characters } }) => {
                         expect(Array.isArray(characters)).toBe(true);
@@ -261,6 +261,33 @@ describe('app', () => {
                     return request(app).get('/api/characters?nameContains=two').expect(200).then(({ body : { characters } }) => {
                         expect(characters.length).toBe(1);
                         expect(characters[0].character_full_name).toBe("number two")
+                    })
+                })
+                it('200: returns empty array if nameContains value doesn\'t exist', () => {
+                    return request(app).get('/api/characters?nameContains=banana').expect(200).then(({ body : { characters } })=> {
+                        expect(characters.length).toBe(0);
+                    })
+                })
+            })
+            describe('Invalid Method', () => {
+                it('405: if passed invalid method', () => {
+                    const invalidMethods = ['put', 'delete', 'patch', 'post']
+                    const methodPromises = invalidMethods.map(method => {
+                        return request(app)[method]("/api/characters").expect(405).then(({ body: { msg } }) => {
+                            expect(msg).toBe('Invalid Method');
+                        })
+                    })
+                    return Promise.all(methodPromises);
+                })
+            })
+            describe('/:character_id', () => {
+                describe.only('GET', () => {
+                    it('200: returns a character object with the correct keys', () => {
+                        return request(app).get('/api/characters/1').expect(200).then(({ body: { character } }) => {
+                            expect(character).toHaveProperty('character_id')
+                            expect(character).toHaveProperty('chracter_full_name')
+                            expect(character).toHaveProperty('character_short_name')
+                        })
                     })
                 })
             })
