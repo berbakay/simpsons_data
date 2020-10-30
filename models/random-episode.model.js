@@ -1,6 +1,6 @@
 const connection = require('../db/connection');
 
-function fetchEpisode(isGood, minSeason, maxSeason) {
+function fetchRandomEpisode(isGood, minSeason, maxSeason) {
     
     if(!minSeason || isNaN(Number(minSeason))) minSeason = 1;
     if(isNaN(Number(maxSeason))) maxSeason = 30
@@ -68,4 +68,4 @@ function fetchEpisodeByCharacter(isGood, minSeason, maxSeason, character_id) {
     })
 } 
 
-module.exports = { fetchEpisode, fetchEpisodeByCharacter };
+module.exports = { fetchRandomEpisode, fetchEpisodeByCharacter };

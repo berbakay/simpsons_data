@@ -1,11 +1,15 @@
 const { fetchEpisodes, fetchEpisodeByID } = require('../models/episodes.model')
 
 exports.getEpisodes = (req, res, next) => {
-    const { isGood, minSeason, maxSeason, character } = req.query;
-    fetchEpisodes(isGood, minSeason, maxSeason, character)
+    const { isGood, minSeason, maxSeason, limit, p } = req.query;
+    fetchEpisodes(isGood, minSeason, maxSeason, limit, p)
     .then(episodes => {
         if(!episodes.length) return Promise.reject(400);
-        return res.status(200).send({ episodes })
+        const fetchedEpisodesNoLimit = fetchEpisodes(isGood, minSeason, maxSeason, Infinity, Infinity)
+        return Promise.all([episodes, fetchedEpisodesNoLimit])
+    })
+    .then(([episodes, fetchedEpisodesNoLimit]) => {
+        res.status(200).send({ episodes, total_count: fetchedEpisodesNoLimit.length})
     })
     .catch(err => next(err));
 }
