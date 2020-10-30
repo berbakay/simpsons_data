@@ -1,6 +1,6 @@
 const connection = require('../db/connection');
 
-function fetchEpisodes (isGood, minSeason, maxSeason, limit, p) {
+function fetchEpisodes (isGood, minSeason, maxSeason, limit, p, sort_by, order) {
     if(!minSeason || isNaN(Number(minSeason))) minSeason = 1;
     let coercedLimit = Number(limit);
     let coercedP = Number(p);
@@ -9,6 +9,8 @@ function fetchEpisodes (isGood, minSeason, maxSeason, limit, p) {
     if(isGood !== "true" && isGood !== "false") isGood = undefined 
     if(isNaN(coercedP)) coercedP = 1;
     const offset = coercedLimit * (coercedP-1);
+    if(!sort_by) sort_by = 'episode_id'
+    if(order !== 'desc' && order !== 'asc') order = 'desc';
     return connection
     .select('*')
     .from('episodes')
@@ -23,6 +25,7 @@ function fetchEpisodes (isGood, minSeason, maxSeason, limit, p) {
             request.andWhere('season', '<=', maxSeason);
         }
     })
+    .orderBy(sort_by, order)
     .limit(coercedLimit)
     .offset(offset);
 }

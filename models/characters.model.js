@@ -1,6 +1,13 @@
 const connection = require('../db/connection');
 
-function fetchCharcters (nameContains) {
+function fetchCharcters (nameContains, limit, p, sort_by, order) {
+    let coercedLimit = Number(limit);
+    let coercedP = Number(p);
+    if(isNaN(coercedLimit)) coercedLimit = 10;
+    if(isNaN(coercedP)) coercedP = 1;
+    const offset = coercedLimit * (coercedP-1);
+    if(!sort_by) sort_by = 'character_id'
+    if(order !== 'desc' && order !== 'asc') order = 'desc';
     return connection
     .select('*')
     .from('characters')
@@ -10,7 +17,9 @@ function fetchCharcters (nameContains) {
             .where('character_full_name', 'like', `%${nameContains}%`)
         }
     })
-    
+    .orderBy(sort_by, order)
+    .limit(coercedLimit)
+    .offset(offset);
 }
 
 function fetchCharctersbyID (character_id) {

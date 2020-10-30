@@ -174,15 +174,35 @@ describe('app', () => {
                         expect(episodes.length).toBe(3);
                     })
                 })
-                it.only('200: has a total_count property displaying total count of articles before limit', () => {
+                it('200: has a total_count property displaying total count of articles before limit', () => {
                     return request(app).get('/api/episodes?limit=3').expect(200).then(({ body }) => {
                         expect(body).toHaveProperty('total_count');
                         expect(body.total_count).toBe(4);
                     })
                 })
-                it('200: has a total_count property displaying total count of articles after filter before limit', () => {
-                    return request(app).get('/api/articles/?author=butter_bridge&limit=2').expect(200).then(({ body }) => {
-                        expect(body.total_count).toBe(3);
+                it('200: default sorts to episode_id (default order desc)', () => {
+                    return request(app).get('/api/episodes/').expect(200).then(({ body: { episodes } }) => {
+                        expect(episodes[0].episode_id).toBe(4);
+                    })
+                })
+                it('200: sorts the articles by any valid column (default order desc)', () => {
+                    return request(app).get('/api/episodes/?sort_by=title').expect(200).then(({ body: { episodes } }) => {
+                        expect(episodes[0].title).toBe('Episode 4');
+                    })
+                })
+                it('200: orders article by asc or desc from order query', () => {
+                    return request(app).get('/api/episodes/?order=asc').expect(200).then(({ body: { episodes } }) => {
+                        expect(episodes[0].episode_id).toBe(1);
+                    })
+                })
+                it('400: when passed a column that does not exist in sort_by query', () => {
+                    return request(app).get('/api/episodes?sort_by=doots').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    })
+                })
+                it('200: order query defaults to desc if query is not asc or desc', () => {
+                    return request(app).get('/api/episodes?order=doots').expect(200).then(({ body: { episodes } }) => {
+                        expect(episodes[0].title).toBe('Episode 4');
                     })
                 })
             })
@@ -255,8 +275,54 @@ describe('app', () => {
                     })
                 })
                 it('200: returns empty array if nameContains value doesn\'t exist', () => {
-                    return request(app).get('/api/characters?nameContains=banana').expect(200).then(({ body : { characters } })=> {
-                        expect(characters.length).toBe(0);
+                    return request(app).get('/api/characters?nameContains=banana').expect(400).then(({ body : { msg } })=> {
+                        expect(msg).toBe('no episode found');
+                    })
+                })
+                it('200: accepts a limit query (default: 10) wich returns defined number of results', () => {
+                    return request(app).get('/api/characters/?limit=3').expect(200).then(({ body: { characters } }) => {
+                        expect(characters.length).toBe(3);
+                    })
+                })
+                it('200: accepts a p query which specifiest which paget to start at calculated using limit', () => {
+                    return request(app).get('/api/characters?limit=5&p=2').expect(200).then(({ body: { characters } }) => {
+                        expect(characters.length).toBe(2);
+                    })
+                })
+                it('200: defaults offset to 0 if passed invalid p type', () => {
+                    return request(app).get('/api/characters/?limit=6&p=cat').expect(200).then(({ body: { characters } }) => {
+                        expect(characters.length).toBe(6);
+                    })
+                })
+                it('200: has a total_count property displaying total count of articles before limit', () => {
+                    return request(app).get('/api/characters?limit=3').expect(200).then(({ body }) => {
+                        expect(body).toHaveProperty('total_count');
+                        expect(body.total_count).toBe(7);
+                    })
+                })
+                it('200: default sorts to character_id (default order desc)', () => {
+                    return request(app).get('/api/characters/').expect(200).then(({ body: { characters } }) => {
+                        expect(characters[0].character_id).toBe(7);
+                    })
+                })
+                it('200: sorts the articles by any valid column (default order desc)', () => {
+                    return request(app).get('/api/characters/?sort_by=character_full_name').expect(200).then(({ body: { characters } }) => {
+                        expect(characters[0].character_full_name).toBe('number two');
+                    })
+                })
+                it('200: orders article by asc or desc from order query', () => {
+                    return request(app).get('/api/characters/?order=asc').expect(200).then(({ body: { characters } }) => {
+                        expect(characters[0].character_id).toBe(1);
+                    })
+                })
+                it('400: when passed a column that does not exist in sort_by query', () => {
+                    return request(app).get('/api/characters?sort_by=doots').expect(400).then(({ body: { msg } }) => {
+                        expect(msg).toBe('no episode found');
+                    })
+                })
+                it('200: order query defaults to desc if query is not asc or desc', () => {
+                    return request(app).get('/api/characters?order=doots').expect(200).then(({ body: { characters } }) => {
+                        expect(characters[0].character_id).toBe(7);
                     })
                 })
             })
