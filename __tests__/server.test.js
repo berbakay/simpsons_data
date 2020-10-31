@@ -22,9 +22,19 @@ describe('app', () => {
         describe('GET', () => {
             it('200: returns a JSON object describing available endpoints', () => {
                 return request(app).get('/api').expect(200).then(({ body }) => {
-                    console.log(body)
                     expect(typeof body).toBe('object');
                 })
+            })
+        })
+        describe('Invalid Method', () => {
+            it('405: if passed invalid method', () => {
+                const invalidMethods = ['put', 'delete', 'patch', 'post']
+                const methodPromises = invalidMethods.map(method => {
+                    return request(app)[method]("/api").expect(405).then(({ body: { msg } }) => {
+                        expect(msg).toBe('Invalid Method');
+                    })
+                })
+                return Promise.all(methodPromises);
             })
         })
         describe('/random_episode', () => {
