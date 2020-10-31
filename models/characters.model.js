@@ -3,7 +3,7 @@ const connection = require('../db/connection');
 function fetchCharcters (nameContains, limit, p, sort_by, order) {
     let coercedLimit = Number(limit);
     let coercedP = Number(p);
-    if(isNaN(coercedLimit)) coercedLimit = 10;
+    if(isNaN(coercedLimit) || coercedLimit < 0) coercedLimit = 10;
     if(isNaN(coercedP)) coercedP = 1;
     const offset = coercedLimit * (coercedP-1);
     if(!sort_by) sort_by = 'character_id'

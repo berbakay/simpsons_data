@@ -205,6 +205,16 @@ describe('app', () => {
                         expect(episodes[0].title).toBe('Episode 4');
                     })
                 })
+                it('200: defaults to 10 if passed invalid limit type', () => {
+                    return request(app).get('/api/episodes?limit=banana').expect(200).then(({ body: { episodes } }) => {
+                        expect(episodes.length).toBe(4);
+                    })
+                })
+                it('200: defaults to 10 if passed limit < 0', () => {
+                    return request(app).get('/api/episodes?limit=-1').expect(200).then(({ body: { episodes } }) => {
+                        expect(episodes.length).toBe(4);
+                    })
+                })
             })
             describe('Invalid Method', () => {
                 it('405: if passed invalid method', () => {
@@ -323,6 +333,16 @@ describe('app', () => {
                 it('200: order query defaults to desc if query is not asc or desc', () => {
                     return request(app).get('/api/characters?order=doots').expect(200).then(({ body: { characters } }) => {
                         expect(characters[0].character_id).toBe(7);
+                    })
+                })
+                it('200: defaults to 10 if passed invalid limit type', () => {
+                    return request(app).get('/api/characters?limit=banana').expect(200).then(({ body: { characters } }) => {
+                        expect(characters.length).toBe(7);
+                    })
+                })
+                it('200: defaults to 10 if passed limit < 0', () => {
+                    return request(app).get('/api/characters?limit=-1').expect(200).then(({ body: { characters } }) => {
+                        expect(characters.length).toBe(7);
                     })
                 })
             })

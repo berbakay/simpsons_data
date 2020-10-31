@@ -4,7 +4,7 @@ function fetchEpisodes (isGood, minSeason, maxSeason, limit, p, sort_by, order) 
     if(!minSeason || isNaN(Number(minSeason))) minSeason = 1;
     let coercedLimit = Number(limit);
     let coercedP = Number(p);
-    if(isNaN(coercedLimit)) coercedLimit = 10;
+    if(isNaN(coercedLimit) || coercedLimit < 0) coercedLimit = 10;
     if(isNaN(Number(maxSeason))) maxSeason = 30
     if(isGood !== "true" && isGood !== "false") isGood = undefined 
     if(isNaN(coercedP)) coercedP = 1;
