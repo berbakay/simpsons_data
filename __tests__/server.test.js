@@ -20,9 +20,10 @@ describe('app', () => {
             })
         })
         describe('GET', () => {
-            it ('200: returns a console log', () => {
-                return request(app).get('/api').expect(200).then(({ body: { msg } }) => {
-                    expect(msg).toBe('tests are working');
+            it('200: returns a JSON object describing available endpoints', () => {
+                return request(app).get('/api').expect(200).then(({ body }) => {
+                    console.log(body)
+                    expect(typeof body).toBe('object');
                 })
             })
         })
@@ -370,12 +371,12 @@ describe('app', () => {
                             expect(character.episodes[0]).toHaveProperty('episode_id')
                         })
                     })
-                    it('400: if passed non existent episode_id', () => {
+                    it('400: if passed non existent character_id', () => {
                         return request(app).get('/api/characters/100').expect(400).then(({ body : { msg } }) => {
                             expect(msg).toBe('no episode found')
                         })
                     })
-                    it('400: if passed invalid episode_id type', () => {
+                    it('400: if passed invalid character_id type', () => {
                         return request(app).get('/api/characters/banana').expect(400).then(({ body: { msg } }) => {
                             expect(msg).toBe('no episode found');
                         })

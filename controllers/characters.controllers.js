@@ -21,7 +21,6 @@ exports.getCharactersByID = (req, res, next) => {
         const characterData = episodeCharacterData[0];
         characterData.episodes = [];
         episodeCharacterData.shift();
-        console.log(episodeCharacterData);
         episodeCharacterData[0].forEach(episodeData => {
             characterData.episodes.push({title : episodeData.title, episode_id: episodeData.episode_id});        
         })

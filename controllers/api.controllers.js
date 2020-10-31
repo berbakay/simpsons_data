@@ -1,3 +1,10 @@
+const { readFile } = require('fs');
+
 exports.getAPIs = (req, res, next) => {
-    res.status(200).send({msg: 'tests are working'});
+    readFile('./endpoints.json', (err, data) => {
+        if(err) next(err);
+        else {
+            res.status(200).send(JSON.parse(data));
+        }
+    })
 }

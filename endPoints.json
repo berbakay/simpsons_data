@@ -2,9 +2,9 @@
     "GET /api": {
         "description": "serves up a json representation of all the available endpoints of the api"
     },
-    "GET /api/episde": {
+    "GET /api/random_episode": {
         "description": "returns random episode object",
-        "queries": ["isGood", "minSeason", "maxSeason"],
+        "queries": ["isGood", "minSeason", "maxSeason", "character_id"],
         "example response": {
             "episode_id": 3,
             "title": "Episode 3",
@@ -17,9 +17,25 @@
             "characters": [ "number one", "number three" ]
         }   
     },
-    "GET /api/episode/:character_id": {
-        "description": "returns random episode object which must contain specified character",
-        "queries": ["isGood", "minSeason", "maxSeason"],
+    "GET /api/episodes": {
+        "description": "returns array of episode objects",
+        "queries": ["isGood", "minSeason", "maxSeason", "limit", "p", "sort_by", "order"],
+        "example response": { "episodes": [{
+            "episode_id": 3,
+            "title": "Episode 3",
+            "season": 3,
+            "episode": 3,
+            "description": "This is episode 3",
+            "disneyplus_id": "0e8e7f27-0ab2-495f-8254-d99d3c53ce4f",
+            "simpsonsworld_id": 273381443699,
+            "good": false
+        }],
+        "total_count" : 1
+        }
+    },
+    "GET /api/episodes/episode_id": {
+        "description": "returns object detailing information of requested episode",
+        "queries": [],
         "example response": {
             "episode_id": 3,
             "title": "Episode 3",
@@ -30,6 +46,30 @@
             "simpsonsworld_id": 273381443699,
             "good": false,
             "characters": [ "number one", "number three" ]
+        }
+    },
+    "GET /api/characters": {
+        "desicription": "returns an array of characters",
+        "queries": ["nameContains", "limit", "p", "total_count", "sort_by", "order"],
+        "example response": { "characters":[{
+            "character_id": 1,
+            "character_long_name": "number one",
+            "character_short_name": "one"
+            }],
+            "total_count": 1
+        } 
+    },
+    "GET /api/characters/character_id": {
+        "description": "returns object detailing information of requested character",
+        "queries": [],
+        "example response": {
+            "character_id": 1,
+            "character_long_name": "number one",
+            "character_short_name": "one",
+            "episodes": [{
+                "episode_id": 1, 
+                "title": "Episode 1"
+            }]
         }
     }
 }
