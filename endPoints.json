@@ -33,7 +33,7 @@
         "total_count" : 1
         }
     },
-    "GET /api/episodes/episode_id": {
+    "GET /api/episodes/:episode_id": {
         "description": "returns object detailing information of requested episode",
         "queries": [],
         "example response": {
@@ -59,7 +59,7 @@
             "total_count": 1
         } 
     },
-    "GET /api/characters/character_id": {
+    "GET /api/characters/:character_id": {
         "description": "returns object detailing information of requested character",
         "queries": [],
         "example response": {
